@@ -1,4 +1,27 @@
-## Hi there 👋
+# Привет, я Надир 👋
+
+Студент IT-специальности.  
+Интересуюсь программированием.
+
+## Технологии
+
+- Python
+- C#
+- HTML / CSS
+- JavaScript
+- Unity
+- Git
+
+## Проекты
+
+- AR приложение на Unity
+- Нейронная сеть для выбора ноутбука
+- Цифровой ассистент технолога
+
+## Контакты
+
+GitHub: https://github.com/NadirrrrQ  
+Email: aznab@email.com
 
 <!--
 **NadirrrrQ/NadirrrrQ** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
