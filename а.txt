@@ -1,0 +1,101 @@
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+
+public class MainViewModel : INotifyPropertyChanged
+{
+    private readonly ArraySorter _sorter;
+    private int[] _originalArray;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public int ArraySize { get; set; } = 1000;
+    public string OriginalArrayString { get; set; }
+    public string BubbleSortResult { get; set; }
+    public string QuickSortResult { get; set; }
+    public string InsertionSortResult { get; set; }
+    public string TotalComparisons { get; set; } = "Общее число сравнений: 0";
+
+    public AsyncCommand GenerateArrayCommand { get; }
+    public AsyncCommand BubbleSortCommand { get; }
+    public AsyncCommand QuickSortCommand { get; }
+    public AsyncCommand InsertionSortCommand { get; }
+
+    public MainViewModel()
+    {
+        _sorter = new ArraySorter();
+
+        GenerateArrayCommand = new AsyncCommand(GenerateArrayAsync, () => true);
+        BubbleSortCommand = new AsyncCommand(BubbleSortAsync, () => _originalArray != null);
+        QuickSortCommand = new AsyncCommand(QuickSortAsync, () => _originalArray != null);
+        InsertionSortCommand = new AsyncCommand(InsertionSortAsync, () => _originalArray != null);
+    }
+
+    private async Task GenerateArrayAsync()
+    {
+        await Task.Delay(50); // имитация задержки
+        _originalArray = _sorter.GenerateRandomArray(ArraySize);
+        OriginalArrayString = "Исходный массив: " +
+            string.Join(", ", _originalArray.Take(Math.Min(20, _originalArray.Length))) +
+            (ArraySize > 20 ? "..." : "");
+
+        BubbleSortResult = QuickSortResult = InsertionSortResult = null;
+        TotalComparisons = "Общее число сравнений: 0";
+
+        BubbleSortCommand.RaiseCanExecuteChanged();
+        QuickSortCommand.RaiseCanExecuteChanged();
+        InsertionSortCommand.RaiseCanExecuteChanged();
+
+        OnPropertyChanged(nameof(OriginalArrayString));
+    }
+
+    private async Task BubbleSortAsync()
+    {
+        BubbleSortResult = "Сортируется...";
+        OnPropertyChanged(nameof(BubbleSortResult));
+
+        var result = await Task.Run(() => _sorter.BubbleSortSync(_originalArray));
+        BubbleSortResult = $"Пузырьковая: {FormatArray(result.SortedArray)}, время: {result.ElapsedMilliseconds:F2} мс, сравнений: {result.Comparisons}";
+
+        UpdateTotal();
+    }
+
+    private async Task QuickSortAsync()
+    {
+        QuickSortResult = "Сортируется...";
+        OnPropertyChanged(nameof(QuickSortResult));
+
+        var result = await Task.Run(() => _sorter.QuickSortSync(_originalArray));
+        QuickSortResult = $"Быстрая: {FormatArray(result.SortedArray)}, время: {result.ElapsedMilliseconds:F2} мс, сравнений: {result.Comparisons}";
+
+        UpdateTotal();
+    }
+
+    private async Task InsertionSortAsync()
+    {
+        InsertionSortResult = "Сортируется...";
+        OnPropertyChanged(nameof(InsertionSortResult));
+
+        var result = await Task.Run(() => _sorter.InsertionSortSync(_originalArray));
+        InsertionSortResult = $"Вставками: {FormatArray(result.SortedArray)}, время: {result.ElapsedMilliseconds:F2} мс, сравнений: {result.Comparisons}";
+
+        UpdateTotal();
+    }
+
+    private void UpdateTotal()
+    {
+        TotalComparisons = $"Общее число сравнений: {_sorter.TotalComparisons}";
+        OnPropertyChanged(nameof(TotalComparisons));
+    }
+
+    private string FormatArray(int[] arr)
+    {
+        return arr.Length <= 10 ? string.Join(", ", arr) : string.Join(", ", arr.Take(5)) + "...";
+    }
+
+    private void OnPropertyChanged(string prop)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+    }
+}

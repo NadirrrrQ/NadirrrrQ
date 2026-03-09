@@ -1,0 +1,31 @@
+<GroupBox Header="Асинхронная сортировка (Task)" Margin="0,220,0,0">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Размер массива:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ArraySize}"/>
+        <Button Grid.Row="0" Grid.Column="2" Content="Сгенерировать" Command="{Binding GenerateArrayCommand}"/>
+
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding OriginalArrayString}" TextWrapping="Wrap"/>
+
+        <Button Grid.Row="2" Grid.Column="0" Content="Пузырьковая" Command="{Binding BubbleSortCommand}"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Быстрая" Command="{Binding QuickSortCommand}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="Вставками" Command="{Binding InsertionSortCommand}"/>
+
+        <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding BubbleSortResult}" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding QuickSortResult}" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding InsertionSortResult}" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="6" Grid.ColumnSpan="3" Text="{Binding TotalComparisons}" FontWeight="Bold"/>
+    </Grid>
+</GroupBox>
